@@ -24,6 +24,7 @@ const Submit = () => {
     setIsSubmitting(true);
 
     try {
+      console.log("Submitting meme:", formData);
       const { error } = await supabase.from("meme_submissions").insert([
         {
           title: formData.title,
@@ -32,13 +33,17 @@ const Submit = () => {
         },
       ]);
 
-      if (error) throw error;
+      if (error) {
+        console.error("Supabase error:", error);
+        throw error;
+      }
 
+      console.log("Meme submitted successfully");
       toast.success("Meme submitted successfully! We'll review it soon.");
       navigate("/");
     } catch (error) {
-      toast.error("Failed to submit meme. Please try again.");
       console.error("Error submitting meme:", error);
+      toast.error("Failed to submit meme. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

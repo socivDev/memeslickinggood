@@ -12,36 +12,61 @@ import { supabase } from "@/integrations/supabase/client";
 const Index = () => {
   const [currentMeme, setCurrentMeme] = useState<Meme | null>(null);
   const [loading, setLoading] = useState(true);
+  const [memes, setMemes] = useState<Meme[]>([]);
 
-  const getRandomMeme = async () => {
+  const fetchMemes = async () => {
     setLoading(true);
     try {
-      const { data: memes, error } = await supabase
+      const { data, error } = await supabase
         .from("memes")
         .select("*")
         .eq("approved", true);
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching memes:", error);
+        throw error;
+      }
 
-      if (memes && memes.length > 0) {
-        const randomIndex = Math.floor(Math.random() * memes.length);
-        setCurrentMeme({
-          id: memes[randomIndex].id,
-          imageUrl: memes[randomIndex].image_url,
-          title: memes[randomIndex].title,
-          createdAt: memes[randomIndex].created_at,
-        });
+      console.log("Fetched memes:", data);
+      
+      if (data && data.length > 0) {
+        const formattedMemes = data.map(meme => ({
+          id: meme.id,
+          imageUrl: meme.image_url,
+          title: meme.title,
+          createdAt: meme.created_at,
+        }));
+        
+        setMemes(formattedMemes);
+        getRandomMeme(formattedMemes);
+      } else {
+        // If no memes in database, use sample memes
+        const { data: sampleMemes } = await import("@/data/memes");
+        setMemes(sampleMemes);
+        getRandomMeme(sampleMemes);
       }
     } catch (error) {
-      console.error("Error fetching meme:", error);
-      toast.error("Failed to load meme");
+      console.error("Error in fetchMemes:", error);
+      toast.error("Failed to load memes");
+      
+      // Fallback to sample memes
+      const { data: sampleMemes } = await import("@/data/memes");
+      setMemes(sampleMemes);
+      getRandomMeme(sampleMemes);
     } finally {
       setLoading(false);
     }
   };
 
+  const getRandomMeme = (memesArray: Meme[] = memes) => {
+    if (memesArray && memesArray.length > 0) {
+      const randomIndex = Math.floor(Math.random() * memesArray.length);
+      setCurrentMeme(memesArray[randomIndex]);
+    }
+  };
+
   useEffect(() => {
-    getRandomMeme();
+    fetchMemes();
   }, []);
 
   return (
@@ -69,7 +94,7 @@ const Index = () => {
           
           <Button 
             size="lg" 
-            onClick={getRandomMeme} 
+            onClick={() => getRandomMeme()}
             disabled={loading}
             className="px-8"
           >

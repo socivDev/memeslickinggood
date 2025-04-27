@@ -38,21 +38,26 @@ const NewsletterModal = () => {
     setIsSubmitting(true);
     
     try {
+      console.log("Attempting to insert email:", email);
       const { error } = await supabase
         .from("subscribers")
         .insert([{ email }]);
 
-      if (error) throw error;
+      if (error) {
+        console.error("Supabase error:", error);
+        throw error;
+      }
 
+      console.log("Email successfully inserted");
       toast.success("Thanks for subscribing!");
       setIsOpen(false);
       localStorage.setItem("newsletter-subscribed", "true");
     } catch (error: any) {
+      console.error("Error in subscription:", error);
       if (error?.code === "23505") {
         toast.error("You're already subscribed!");
       } else {
         toast.error("Failed to subscribe. Please try again.");
-        console.error(error);
       }
     } finally {
       setIsSubmitting(false);
