@@ -41,7 +41,7 @@ const Index = () => {
         getRandomMeme(formattedMemes);
       } else {
         // If no memes in database, use sample memes
-        const { data: sampleMemes } = await import("@/data/memes");
+        const { sampleMemes } = await import("@/data/memes");
         setMemes(sampleMemes);
         getRandomMeme(sampleMemes);
       }
@@ -50,7 +50,7 @@ const Index = () => {
       toast.error("Failed to load memes");
       
       // Fallback to sample memes
-      const { data: sampleMemes } = await import("@/data/memes");
+      const { sampleMemes } = await import("@/data/memes");
       setMemes(sampleMemes);
       getRandomMeme(sampleMemes);
     } finally {
