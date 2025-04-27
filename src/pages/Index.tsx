@@ -76,8 +76,8 @@ const Index = () => {
       <main className="flex-1 container max-w-screen-md py-12">
         <div className="flex flex-col items-center justify-center space-y-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold mb-4">MemeWave</h1>
-            <p className="text-muted-foreground mb-8">Your daily dose of internet humor</p>
+            <h1 className="text-4xl font-bold mb-4">Memes Licking Good</h1>
+            <p className="text-muted-foreground mb-8">Your daily dose of unwanted humor</p>
           </div>
           
           {loading ? (

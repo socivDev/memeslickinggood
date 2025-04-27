@@ -45,7 +45,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
             <h3 className="font-semibold text-lg bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-              MemeWave
+              Memes Licking Good
             </h3>
             <p className="text-sm text-muted-foreground">
               Your daily source of internet humor and entertainment.
@@ -64,15 +64,7 @@ const Footer = () => {
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">Follow Us</h3>
             <div className="flex space-x-4">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" 
-                className="text-muted-foreground hover:text-foreground transition-colors">
-                <Facebook />
-              </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors">
-                <Twitter />
-              </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
+              <a href="https://instagram.com/memeslickinggood" target="_blank" rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-foreground transition-colors">
                 <Instagram />
               </a>
@@ -102,7 +94,7 @@ const Footer = () => {
         </div>
         
         <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} MemeWave. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Memes Licking Good. All rights reserved.</p>
         </div>
       </div>
     </footer>
