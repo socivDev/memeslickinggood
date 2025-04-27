@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const NewsletterModal = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,7 +18,6 @@ const NewsletterModal = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   useEffect(() => {
-    // Show modal after 5 seconds
     const timer = setTimeout(() => {
       if (!localStorage.getItem("newsletter-subscribed")) {
         setIsOpen(true);
@@ -38,13 +38,22 @@ const NewsletterModal = () => {
     setIsSubmitting(true);
     
     try {
-      // In a real app with Supabase, you would add code here to save the email
+      const { error } = await supabase
+        .from("subscribers")
+        .insert([{ email }]);
+
+      if (error) throw error;
+
       toast.success("Thanks for subscribing!");
       setIsOpen(false);
       localStorage.setItem("newsletter-subscribed", "true");
-    } catch (error) {
-      toast.error("Failed to subscribe. Please try again.");
-      console.error(error);
+    } catch (error: any) {
+      if (error?.code === "23505") {
+        toast.error("You're already subscribed!");
+      } else {
+        toast.error("Failed to subscribe. Please try again.");
+        console.error(error);
+      }
     } finally {
       setIsSubmitting(false);
     }

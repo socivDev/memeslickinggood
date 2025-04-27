@@ -2,40 +2,53 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import MemeCard from "@/components/MemeCard";
 import NewsletterModal from "@/components/NewsletterModal";
-import { sampleMemes } from "@/data/memes";
 import { Meme } from "@/types";
 import { toast } from "@/components/ui/sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
   const [currentMeme, setCurrentMeme] = useState<Meme | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const getRandomMeme = () => {
+  const getRandomMeme = async () => {
     setLoading(true);
-    // Simulate API loading
-    setTimeout(() => {
-      const randomIndex = Math.floor(Math.random() * sampleMemes.length);
-      setCurrentMeme(sampleMemes[randomIndex]);
+    try {
+      const { data: memes, error } = await supabase
+        .from("memes")
+        .select("*")
+        .eq("approved", true);
+
+      if (error) throw error;
+
+      if (memes && memes.length > 0) {
+        const randomIndex = Math.floor(Math.random() * memes.length);
+        setCurrentMeme({
+          id: memes[randomIndex].id,
+          imageUrl: memes[randomIndex].image_url,
+          title: memes[randomIndex].title,
+          createdAt: memes[randomIndex].created_at,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching meme:", error);
+      toast.error("Failed to load meme");
+    } finally {
       setLoading(false);
-    }, 500);
+    }
   };
 
   useEffect(() => {
     getRandomMeme();
   }, []);
 
-  const handleRefresh = () => {
-    toast.info("Loading new meme...");
-    getRandomMeme();
-  };
-
   return (
     <div className="flex flex-col min-h-screen bg-muted">
       <Header />
       
-      <main className="flex-1 container max-w-screen-md py-8">
+      <main className="flex-1 container max-w-screen-md py-12">
         <div className="flex flex-col items-center justify-center space-y-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold mb-4">MemeWave</h1>
@@ -56,7 +69,7 @@ const Index = () => {
           
           <Button 
             size="lg" 
-            onClick={handleRefresh} 
+            onClick={getRandomMeme} 
             disabled={loading}
             className="px-8"
           >
@@ -65,12 +78,7 @@ const Index = () => {
         </div>
       </main>
       
-      <footer className="border-t py-6 bg-background">
-        <div className="container text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} MemeWave. All rights reserved.
-        </div>
-      </footer>
-      
+      <Footer />
       <NewsletterModal />
     </div>
   );

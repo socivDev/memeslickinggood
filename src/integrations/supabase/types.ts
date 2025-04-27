@@ -9,7 +9,75 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      meme_submissions: {
+        Row: {
+          approved: boolean | null
+          created_at: string
+          id: string
+          image_url: string
+          submitter_email: string | null
+          title: string
+        }
+        Insert: {
+          approved?: boolean | null
+          created_at?: string
+          id?: string
+          image_url: string
+          submitter_email?: string | null
+          title: string
+        }
+        Update: {
+          approved?: boolean | null
+          created_at?: string
+          id?: string
+          image_url?: string
+          submitter_email?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
+      memes: {
+        Row: {
+          approved: boolean | null
+          created_at: string
+          id: string
+          image_url: string
+          title: string
+        }
+        Insert: {
+          approved?: boolean | null
+          created_at?: string
+          id?: string
+          image_url: string
+          title: string
+        }
+        Update: {
+          approved?: boolean | null
+          created_at?: string
+          id?: string
+          image_url?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
